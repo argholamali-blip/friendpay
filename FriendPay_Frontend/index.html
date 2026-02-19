@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>FriendPay - صورتحساب‌ها را تقسیم کنید، دوست بمانید</title>
+
+    <meta name="theme-color" content="#006400">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Split bills with friends, stay friends">
+    <link rel="manifest" href="manifest.json">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-50">
+
+<!-- AUTH SCREENS -->
+<div id="auth-container">
+    <!-- WELCOME/LOGIN SCREEN -->
+    <div id="auth-login" class="auth-screen active h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-green-600 to-green-800">
+        <div class="text-center text-white mb-8">
+            <div class="text-6xl mb-4">💰</div>
+            <h1 class="text-4xl font-bold mb-2">FriendPay</h1>
+            <p class="text-green-100">صورتحساب‌ها را تقسیم کنید، دوست بمانید</p>
+        </div>
+
+        <div class="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl">
+            <h2 class="text-2xl font-bold text-center mb-6">ورود</h2>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2 text-right">شماره موبایل</label>
+                <input type="tel" id="login-phone" class="w-full py-3 px-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none text-right" placeholder="09123456789">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2 text-right">رمز عبور</label>
+                <input type="password" id="login-password" class="w-full py-3 px-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none text-right" placeholder="••••••••">
+            </div>
+
+            <button id="login-btn" class="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl active:scale-98 transition-all mb-3">
+                ورود
+            </button>
+
+            <button onclick="showAuthScreen('register')" class="w-full py-3 text-green-600 font-semibold">
+                ثبت‌نام جدید
+            </button>
+        </div>
+    </div>
+
+    <!-- REGISTER SCREEN -->
+    <div id="auth-register" class="auth-screen h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-green-600 to-green-800">
+        <div class="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl">
+            <div class="flex items-center mb-6">
+                <button onclick="showAuthScreen('login')" class="p-2 hover:bg-gray-100 rounded-full">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+                <h2 class="text-2xl font-bold flex-1 text-center">ثبت‌نام</h2>
+                <div class="w-10"></div>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2 text-right">شماره موبایل</label>
+                <input type="tel" id="register-phone" class="w-full py-3 px-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none text-right" placeholder="09123456789">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2 text-right">نام کامل</label>
+                <input type="text" id="register-name" class="w-full py-3 px-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none text-right" placeholder="علی احمدی">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2 text-right">رمز عبور</label>
+                <input type="password" id="register-password" class="w-full py-3 px-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none text-right" placeholder="••••••••">
+            </div>
+
+            <button id="register-btn" class="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl active:scale-98 transition-all">
+                ثبت‌نام
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" class="app-container" style="display: none;">
+    <div class="flex flex-col h-full relative">
+        
+        <main class="flex-1 overflow-y-auto no-scrollbar pb-20">
+            
+            <!-- HOME VIEW -->
+            <div id="view-home" class="view">
+                <header class="sticky top-0 bg-white z-20 px-6 py-4 border-b border-gray-100 safe-area-top">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-2xl font-bold text-brand-green">FriendPay</h1>
+                            <p class="text-xs text-gray-500" id="user-name-display">صورتحساب‌ها را تقسیم کنید، دوست بمانید</p>
+                        </div>
+                        <button onclick="handleLogout()" class="p-2 hover:bg-gray-100 rounded-full" title="خروج">
+                            <svg class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                        </button>
+                    </div>
+                </header>
+                
+                <div class="px-6 py-4">
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-2xl">
+                            <p class="text-xs text-red-700 font-medium mb-1">شما بدهکارید</p>
+                            <p id="dashboard-you-owe" class="text-2xl font-bold text-red-700">۰ <span class="text-lg">ت</span></p>
+                        </div>
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-2xl">
+                            <p class="text-xs text-green-700 font-medium mb-1">شما طلبکارید</p>
+                            <p id="dashboard-owed-to-you" class="text-2xl font-bold text-green-700">۰ <span class="text-lg">ت</span></p>
+                        </div>
+                    </div>
+
+                    <button onclick="showModal('modal-invite-friend')" class="w-full py-3 bg-green-600 text-white font-semibold rounded-xl mb-4 hover:bg-green-700 active:scale-98 transition-all">
+                        + دعوت دوست جدید
+                    </button>
+                </div>
+                
+                <div class="px-6 pb-4">
+                    <h2 class="text-sm font-semibold text-gray-500 uppercase mb-3">دوستان</h2>
+                    
+                    <div id="friends-list-container">
+                        <div class="text-center py-8">
+                            <div class="inline-block w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin mb-3"></div>
+                            <p class="text-gray-500">در حال بارگذاری...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- GROUPS VIEW -->
+            <div id="view-groups" class="view hidden">
+                <header class="sticky top-0 bg-white z-20 px-6 py-4 border-b border-gray-100 safe-area-top">
+                    <h1 class="text-2xl font-bold text-center">گروه‌ها</h1>
+                </header>
+                <div class="p-6"><p class="text-center text-gray-500">به زودی...</p></div>
+            </div>
+            
+            <!-- WALLET VIEW -->
+            <div id="view-wallet" class="view hidden">
+                <header class="sticky top-0 bg-white z-20 px-6 py-4 border-b border-gray-100 safe-area-top">
+                    <h1 class="text-2xl font-bold text-center">کیف پول</h1>
+                </header>
+                <div class="p-6"><p class="text-center text-gray-500">به زودی...</p></div>
+            </div>
+            
+            <!-- PROFILE VIEW -->
+            <div id="view-profile" class="view hidden">
+                <header class="sticky top-0 bg-white z-20 border-b border-gray-100 safe-area-top">
+                    <div class="px-6 py-4">
+                        <h1 class="text-2xl font-bold text-center mb-4">پروفایل</h1>
+                        
+                        <div class="flex items-center space-x-4 space-x-reverse mb-4">
+                            <div class="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                                <span id="profile-initials">U</span>
+                            </div>
+                            <div class="flex-1">
+                                <h2 id="profile-fullname" class="text-xl font-bold">کاربر</h2>
+                                <p id="profile-phone" class="text-sm text-gray-500">-</p>
+                                <p class="text-xs text-green-600 mt-1">✓ تایید شده</p>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                
+                <div class="px-6 py-4">
+                    <div class="space-y-3 mb-6">
+                        <div class="bg-white rounded-xl p-4 border border-gray-200">
+                            <p class="text-xs text-gray-500 mb-1">موجودی خالص</p>
+                            <p id="profile-net-balance" class="font-semibold">۰ ت</p>
+                        </div>
+                    </div>
+                    
+                    <button onclick="handleLogout()" class="w-full py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 active:scale-98 transition-all">
+                        خروج از حساب
+                    </button>
+                </div>
+            </div>
+            
+        </main>
+        
+        <!-- BOTTOM NAVIGATION -->
+        <nav class="bg-white border-t border-gray-200 z-30 safe-area-bottom">
+            <div class="flex justify-around items-center h-16 px-2">
+                <button class="nav-item flex flex-col items-center justify-center text-gray-500 hover:text-brand-green flex-1 active" data-view="home">
+                    <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    <span class="text-xs font-medium">خانه</span>
+                </button>
+                
+                <button class="nav-item flex flex-col items-center justify-center text-gray-500 hover:text-brand-green flex-1" data-view="groups">
+                    <svg class="w-6 h-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span class="text-xs font-medium">گروه‌ها</span>
+                </button>
+                
+                <div class="flex-1 flex justify-center">
+                    <button onclick="showModal('modal-invite-friend')" class="fab">
+                        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <button class="nav-item flex flex-col items-center justify-center text-gray-500 hover:text-brand-green flex-1" data-view="wallet">
+                    <svg class="w-6 h-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                    <span class="text-xs font-medium">کیف پول</span>
+                </button>
+                
+                <button class="nav-item flex flex-col items-center justify-center text-gray-500 hover:text-brand-green flex-1" data-view="profile">
+                    <svg class="w-6 h-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <span class="text-xs font-medium">پروفایل</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<!-- MODALS -->
+<div id="modal-invite-friend" class="modal hidden fixed inset-0">
+    <div class="absolute inset-0 bg-black/60" onclick="hideModal('modal-invite-friend')"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-6 animate-fade-in">
+            <h2 class="text-2xl font-bold text-center mb-6">دعوت دوست جدید</h2>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2 text-right">شماره موبایل دوست</label>
+                <input type="tel" id="invite-phone" class="w-full py-3 px-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none text-right" placeholder="09187654321">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2 text-right">مبلغ بدهی</label>
+                <div class="relative">
+                    <input type="number" id="invite-amount" class="w-full text-2xl font-bold text-center py-3 px-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none" placeholder="0">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-gray-400">ت</span>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2 text-right">توضیحات</label>
+                <input type="text" id="invite-description" class="w-full py-3 px-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none text-right" placeholder="مثلا: شام رستوران">
+            </div>
+
+            <button onclick="handleSendInvitation()" class="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl active:scale-98 transition-all">
+                ارسال دعوتنامه
+            </button>
+            <button onclick="hideModal('modal-invite-friend')" class="w-full py-3 text-gray-600 font-semibold mt-2">
+                انصراف
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-settle-debt" class="modal hidden fixed inset-0">
+    <div class="absolute inset-0 bg-black/60" onclick="hideModal('modal-settle-debt')"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-6 animate-fade-in">
+            <h2 class="text-2xl font-bold text-center mb-6">تسویه حساب</h2>
+            
+            <div class="mb-4 p-4 bg-gray-50 rounded-2xl">
+                <p class="text-sm text-gray-600">پرداخت به:</p>
+                <p id="settle-friend-name" class="text-xl font-bold">-</p>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2 text-right">مبلغ پرداخت</label>
+                <div class="relative">
+                    <input type="number" id="settle-amount" class="w-full text-2xl font-bold text-center py-3 px-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-green-500 focus:ring-4 focus:ring-green-100 outline-none" placeholder="0">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-gray-400">ت</span>
+                </div>
+            </div>
+
+            <button onclick="handleSettleDebt()" class="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl active:scale-98 transition-all">
+                تایید پرداخت
+            </button>
+            <button onclick="hideModal('modal-settle-debt')" class="w-full py-3 text-gray-600 font-semibold mt-2">
+                انصراف
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-alert" class="modal hidden fixed inset-0">
+    <div class="absolute inset-0 bg-black/60" onclick="hideModal('modal-alert')"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 text-center animate-fade-in">
+            <h2 id="alert-title" class="text-2xl font-bold text-gray-900 mb-3">توجه</h2>
+            <p id="alert-message" class="text-lg text-gray-600 mb-6 whitespace-pre-line">پیام</p>
+            <button onclick="hideModal('modal-alert')" class="w-full py-3 bg-green-600 text-white font-bold rounded-2xl shadow-lg active:scale-98 transition-all">
+                باشه
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Load JavaScript Files -->
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

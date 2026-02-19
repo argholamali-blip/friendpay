@@ -1,0 +1,5 @@
+node_modules/
+.env
+*.log
+.DS_Store
+FriendPay_Backend/node_modules/
