@@ -82,15 +82,13 @@ function initApp() {
         logoutBtn.addEventListener('click', window.handleLogout);
     }
 
-    // Auth Screen Switch Buttons — attach directly to avoid any onclick/override issues
-    const goToRegisterBtn = document.querySelector('button[onclick="showAuthScreen(\'register\')"]');
-    const goToLoginBtn = document.querySelector('button[onclick="showAuthScreen(\'login\')"]');
+    // Auth Screen Switch Buttons
+    const goToRegisterBtn = document.getElementById('go-to-register-btn');
+    const goToLoginBtn = document.getElementById('go-to-login-btn');
     if (goToRegisterBtn) {
-        goToRegisterBtn.removeAttribute('onclick');
         goToRegisterBtn.addEventListener('click', () => window.showAuthScreen('register'));
     }
     if (goToLoginBtn) {
-        goToLoginBtn.removeAttribute('onclick');
         goToLoginBtn.addEventListener('click', () => window.showAuthScreen('login'));
     }
 
