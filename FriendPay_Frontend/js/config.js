@@ -2,15 +2,12 @@
 
 // API Configuration
 const CONFIG = {
-    // ▼ PRODUCTION: Replace this with your Railway backend URL after deploying
-    // Example: 'https://friendpay-backend-production.up.railway.app/api'
-    PRODUCTION_API_URL: 'REPLACE_WITH_RAILWAY_URL',
+    // ▼ PRODUCTION: Railway backend URL
+    PRODUCTION_API_URL: 'https://friendpay-production.up.railway.app/api',
 
     API_BASE_URL: (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
         ? 'http://localhost:3000/api'
-        : ('REPLACE_WITH_RAILWAY_URL' !== 'REPLACE_WITH_RAILWAY_URL'
-            ? 'REPLACE_WITH_RAILWAY_URL'
-            : `http://${window.location.hostname}:3000/api`),
+        : 'https://friendpay-production.up.railway.app/api',
     
     // App Configuration
     APP_NAME: 'FriendPay',
