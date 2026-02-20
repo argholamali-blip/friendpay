@@ -167,31 +167,7 @@ function checkAuthStatus() {
     }
 }
 
-// ------------------------------------------------------------------
-// SAFETY PATCH: Prevent checkAuthStatus() from overriding manual clicks
-// ------------------------------------------------------------------
-let manualSwitch = false;
-
-// Keep original versions
-const _showAuthScreen = showAuthScreen;
-const _checkAuthStatus = checkAuthStatus;
-
-// Override showAuthScreen to mark manual user actions
-showAuthScreen = function(screen) {
-    manualSwitch = true;
-    _showAuthScreen(screen);
-};
-
-// Override checkAuthStatus to ignore if user has switched manually
-checkAuthStatus = function() {
-    if (manualSwitch) {
-        console.log('Manual auth screen switch detected — skipping checkAuthStatus');
-        return;
-    }
-    _checkAuthStatus();
-};
-
-// Make sure both functions are globally accessible
+// Make sure all functions are globally accessible
 window.showAuthScreen = showAuthScreen;
 window.checkAuthStatus = checkAuthStatus;
 window.handleLogin = handleLogin;

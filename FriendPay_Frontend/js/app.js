@@ -82,7 +82,17 @@ function initApp() {
         logoutBtn.addEventListener('click', window.handleLogout);
     }
 
-    // Auth Screen Switch Handlers are handled via onclick attributes in HTML (showAuthScreen is globally exposed by auth.js)
+    // Auth Screen Switch Buttons — attach directly to avoid any onclick/override issues
+    const goToRegisterBtn = document.querySelector('button[onclick="showAuthScreen(\'register\')"]');
+    const goToLoginBtn = document.querySelector('button[onclick="showAuthScreen(\'login\')"]');
+    if (goToRegisterBtn) {
+        goToRegisterBtn.removeAttribute('onclick');
+        goToRegisterBtn.addEventListener('click', () => window.showAuthScreen('register'));
+    }
+    if (goToLoginBtn) {
+        goToLoginBtn.removeAttribute('onclick');
+        goToLoginBtn.addEventListener('click', () => window.showAuthScreen('login'));
+    }
 
     // Navigation (already correct, assumes classes are on nav-item)
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -100,6 +110,13 @@ function initApp() {
         window.showMainApp();
     } else {
         window.showAuthScreen('login');
+    }
+
+    // Also update service worker — force skip waiting to avoid caching old JS
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => {
+            regs.forEach(reg => reg.update());
+        });
     }
     
     console.log('FriendPay Initialized Successfully!');
