@@ -15,8 +15,8 @@ const app = express();
 
 // Middleware - allow all origins for local prototype
 app.use(cors({ origin: '*', credentials: true, optionsSuccessStatus: 200 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '20mb' }));
+app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 
 // Health check endpoint
 app.get('/', (req, res) => {
