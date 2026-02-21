@@ -258,7 +258,49 @@ exports.login = async (req, res) => {
     }
 };
 
-// --- 4. Get Dashboard Data ---
+// --- 4. Find User by Phone ---
+exports.findByPhone = async (req, res) => {
+    const { phoneNumber } = req.body;
+
+    if (!phoneNumber || !/^09\d{9}$/.test(phoneNumber)) {
+        return res.status(400).json({ message: 'شماره موبایل معتبر نیست.' });
+    }
+
+    try {
+        const user = await User.findOne({ phoneNumber, isVerified: true })
+            .select('fullName phoneNumber')
+            .lean();
+
+        if (user) {
+            return res.status(200).json({
+                found: true,
+                status: 'registered',
+                user: {
+                    id: user._id,
+                    fullName: user.fullName,
+                    phoneNumber: user.phoneNumber
+                }
+            });
+        }
+
+        // User not found — return as pending/ghost
+        return res.status(200).json({
+            found: false,
+            status: 'pending',
+            user: {
+                id: phoneNumber,          // phone number IS the ID for ghosts
+                fullName: phoneNumber,     // frontend will show phone as name
+                phoneNumber: phoneNumber
+            }
+        });
+
+    } catch (error) {
+        console.error('Find by phone error:', error);
+        return res.status(500).json({ message: 'خطا در جستجو.' });
+    }
+};
+
+// --- 5. Get Dashboard Data ---
 exports.getDashboardData = async (req, res) => {
     const userId = req.userId;
 
