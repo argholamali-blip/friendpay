@@ -1,6 +1,6 @@
 // sw.js - Service Worker for FriendPay PWA
 
-const CACHE_NAME = 'friendpay-v1.0.4';
+const CACHE_NAME = 'friendpay-v1.0.5';
 const urlsToCache = [
   './',
   './index.html',

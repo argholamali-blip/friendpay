@@ -283,6 +283,15 @@
             </svg>
             <span class="nav-label">گروه‌ها</span>
         </button>
+        <!-- ── FAB Centre Slot ── -->
+        <div class="nav-fab-slot">
+            <button id="fab-btn" class="fab-btn" onclick="toggleFAB()" aria-label="عملیات جدید">
+                <svg id="fab-icon" class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+            </button>
+        </div>
+
         <button class="nav-item" data-view="wallet">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
@@ -296,6 +305,45 @@
             <span class="nav-label">پروفایل</span>
         </button>
     </nav>
+
+    <!-- ── FAB OVERLAY ── -->
+    <div id="fab-overlay" class="fab-overlay" onclick="closeFAB()"></div>
+
+    <!-- ── FAB EXPANSION MENU ── -->
+    <div id="fab-menu" class="fab-menu">
+        <div class="fab-menu-item" id="fmi-1" onclick="closeFAB(); openQuickSplit()">
+            <span class="fab-menu-label">تقسیم سریع</span>
+            <div class="fab-menu-icon-wrap" style="background:linear-gradient(135deg,#43a047,#2e7d32)">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+            </div>
+        </div>
+        <div class="fab-menu-item" id="fmi-2" onclick="closeFAB(); openSmartScan()">
+            <span class="fab-menu-label">اسکن هوشمند رسید</span>
+            <div class="fab-menu-icon-wrap" style="background:linear-gradient(135deg,#7c4dff,#512da8)">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
+                </svg>
+            </div>
+        </div>
+        <div class="fab-menu-item" id="fmi-3" onclick="closeFAB(); openNewGroup()">
+            <span class="fab-menu-label">ایجاد گروه / سفر</span>
+            <div class="fab-menu-icon-wrap" style="background:linear-gradient(135deg,#ff7043,#e64a19)">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+                </svg>
+            </div>
+        </div>
+        <div class="fab-menu-item" id="fmi-4" onclick="closeFAB(); openDirectTransfer()">
+            <span class="fab-menu-label">انتقال مستقیم</span>
+            <div class="fab-menu-icon-wrap" style="background:linear-gradient(135deg,#00acc1,#00838f)">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+            </div>
+        </div>
+    </div>
 
 </div><!-- end main-app -->
 
@@ -362,12 +410,207 @@
     </div>
 </div>
 
+<!-- ═══════════════════════════════════════════
+     ACTION MODALS
+═══════════════════════════════════════════ -->
+
+<!-- ── QUICK SPLIT MODAL ── -->
+<div id="modal-quick-split" class="modal hidden">
+    <div class="modal-bg" onclick="closeQuickSplit()"></div>
+    <div class="modal-box modal-tall">
+        <div class="modal-drag-handle"></div>
+        <div class="modal-hdr-row">
+            <div class="modal-icon-badge" style="background:linear-gradient(135deg,#43a047,#2e7d32)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+            </div>
+            <div>
+                <h2 class="modal-title" style="margin-bottom:2px">تقسیم سریع</h2>
+                <p class="modal-subtitle" style="margin:0">هزینه را وارد و بین دوستان تقسیم کنید</p>
+            </div>
+        </div>
+
+        <!-- Amount + Description -->
+        <div class="qs-amount-row">
+            <input type="number" id="qs-amount" class="qs-amount-input" placeholder="۰" inputmode="numeric">
+            <span class="qs-amount-unit">تومان</span>
+        </div>
+        <div class="field-group" style="margin-top:12px">
+            <input type="text" id="qs-description" class="field-input" placeholder="بابت چه چیزی؟ مثلاً: شام رستوران">
+        </div>
+
+        <!-- Who paid -->
+        <p class="qs-section-label">چه کسی پرداخت کرد؟</p>
+        <div id="qs-payer-list" class="qs-chip-row">
+            <!-- populated by JS -->
+        </div>
+
+        <!-- Split among -->
+        <div class="qs-split-hdr">
+            <p class="qs-section-label" style="margin:0">تقسیم بین</p>
+            <button class="qs-toggle-btn" id="qs-toggle-mode" onclick="toggleSplitMode()">تقسیم وزنی</button>
+        </div>
+        <div id="qs-split-list" class="qs-split-list">
+            <!-- populated by JS -->
+        </div>
+
+        <!-- Summary row -->
+        <div class="qs-summary" id="qs-summary">
+            <span id="qs-summary-text">هر نفر: ۰ تومان</span>
+        </div>
+
+        <button onclick="confirmQuickSplit()" class="btn-green btn-lg" style="margin-top:8px">تایید و ثبت</button>
+        <button onclick="closeQuickSplit()" class="btn-ghost">انصراف</button>
+    </div>
+</div>
+
+<!-- ── SMART SCAN MODAL ── -->
+<div id="modal-smart-scan" class="modal hidden">
+    <div class="modal-bg" onclick="closeSmartScan()"></div>
+    <div class="modal-box modal-tall">
+        <div class="modal-drag-handle"></div>
+        <div class="modal-hdr-row">
+            <div class="modal-icon-badge" style="background:linear-gradient(135deg,#7c4dff,#512da8)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
+                </svg>
+            </div>
+            <div>
+                <h2 class="modal-title" style="margin-bottom:2px">اسکن هوشمند رسید</h2>
+                <p class="modal-subtitle" style="margin:0">رسید را عکس بگیرید — هوش مصنوعی تحلیل می‌کند</p>
+            </div>
+        </div>
+
+        <!-- Scan states -->
+        <div id="scan-state-upload" class="scan-state">
+            <label class="scan-drop-zone" for="scan-file-input">
+                <div class="scan-drop-icon">📷</div>
+                <p class="scan-drop-title">عکس رسید را انتخاب کنید</p>
+                <p class="scan-drop-sub">یا اینجا بکشید و رها کنید</p>
+                <input type="file" id="scan-file-input" accept="image/*" capture="environment" style="display:none" onchange="handleScanFile(this)">
+            </label>
+        </div>
+
+        <div id="scan-state-processing" class="scan-state hidden">
+            <div class="scan-processing-wrap">
+                <div class="scan-ai-ring">
+                    <div class="scan-ai-spinner"></div>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7c4dff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute">
+                        <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+                    </svg>
+                </div>
+                <p class="scan-processing-title">هوش مصنوعی در حال تحلیل...</p>
+                <p class="scan-processing-sub">تشخیص اقلام و محاسبه مالیات</p>
+            </div>
+        </div>
+
+        <div id="scan-state-result" class="scan-state hidden">
+            <!-- Merchant + total banner -->
+            <div class="scan-result-banner" id="scan-banner">
+                <span id="scan-merchant">نام فروشگاه</span>
+                <span id="scan-total-display" class="scan-total-val">۰ تومان</span>
+            </div>
+            <!-- Item list for assignment -->
+            <p class="qs-section-label">برای هر قلم، مشخص کنید چه کسی می‌خورد:</p>
+            <div id="scan-items-list" class="scan-items-list"></div>
+            <!-- Assign to friends -->
+            <p class="qs-section-label" style="margin-top:12px">دوستان</p>
+            <div id="scan-friends-row" class="qs-chip-row"></div>
+            <!-- Summary -->
+            <div id="scan-summary-list" class="scan-summary-list"></div>
+            <button onclick="confirmSmartScan()" class="btn-green btn-lg" style="margin-top:12px">تایید و ثبت</button>
+            <button onclick="closeSmartScan()" class="btn-ghost">انصراف</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── NEW GROUP MODAL ── -->
+<div id="modal-new-group" class="modal hidden">
+    <div class="modal-bg" onclick="hideModal('modal-new-group')"></div>
+    <div class="modal-box">
+        <div class="modal-drag-handle"></div>
+        <div class="modal-hdr-row">
+            <div class="modal-icon-badge" style="background:linear-gradient(135deg,#ff7043,#e64a19)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+                </svg>
+            </div>
+            <div>
+                <h2 class="modal-title" style="margin-bottom:2px">گروه جدید</h2>
+                <p class="modal-subtitle" style="margin:0">سفر، دفتر، یا هر رویداد مشترک</p>
+            </div>
+        </div>
+
+        <!-- Group type chips -->
+        <div class="grp-type-row">
+            <button class="grp-type-chip active" data-type="trip">✈️ سفر</button>
+            <button class="grp-type-chip" data-type="home">🏠 خانه</button>
+            <button class="grp-type-chip" data-type="office">💼 کار</button>
+            <button class="grp-type-chip" data-type="other">🎉 سایر</button>
+        </div>
+
+        <div class="field-group" style="margin-top:16px">
+            <label class="field-label">نام گروه</label>
+            <input type="text" id="grp-name" class="field-input" placeholder="مثلاً: سفر چالوس ۱۴۰۴">
+        </div>
+
+        <div class="coming-soon-badge">
+            <span>🚧</span>
+            <span>این قابلیت به زودی فعال می‌شود</span>
+        </div>
+
+        <button class="btn-green btn-lg" style="opacity:.5;pointer-events:none">ایجاد گروه</button>
+        <button onclick="hideModal('modal-new-group')" class="btn-ghost">بازگشت</button>
+    </div>
+</div>
+
+<!-- ── DIRECT TRANSFER MODAL ── -->
+<div id="modal-direct-transfer" class="modal hidden">
+    <div class="modal-bg" onclick="hideModal('modal-direct-transfer')"></div>
+    <div class="modal-box">
+        <div class="modal-drag-handle"></div>
+        <div class="modal-hdr-row">
+            <div class="modal-icon-badge" style="background:linear-gradient(135deg,#00acc1,#00838f)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+            </div>
+            <div>
+                <h2 class="modal-title" style="margin-bottom:2px">انتقال مستقیم</h2>
+                <p class="modal-subtitle" style="margin:0">از کیف پول خود به دوستتان</p>
+            </div>
+        </div>
+
+        <p class="qs-section-label">انتقال به:</p>
+        <div id="dt-friends-row" class="qs-chip-row"></div>
+
+        <div class="field-group" style="margin-top:16px">
+            <label class="field-label">مبلغ (تومان)</label>
+            <input type="number" id="dt-amount" class="field-input field-amount" placeholder="۰" inputmode="numeric">
+        </div>
+        <div class="field-group">
+            <label class="field-label">توضیح (اختیاری)</label>
+            <input type="text" id="dt-note" class="field-input" placeholder="مثلاً: قرض ماه گذشته">
+        </div>
+
+        <div class="coming-soon-badge">
+            <span>🚧</span>
+            <span>کیف پول به زودی فعال می‌شود</span>
+        </div>
+
+        <button class="btn-green btn-lg" style="opacity:.5;pointer-events:none">ارسال</button>
+        <button onclick="hideModal('modal-direct-transfer')" class="btn-ghost">انصراف</button>
+    </div>
+</div>
+
 <!-- Scripts -->
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/ui.js"></script>
+<script src="js/actions.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

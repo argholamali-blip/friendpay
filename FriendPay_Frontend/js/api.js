@@ -118,6 +118,14 @@ const API = {
         return this.request(CONFIG.ENDPOINTS.PAYMENT_HISTORY, {
             method: 'GET'
         });
+    },
+
+    // OCR: send base64 image to backend → Gemini 2.0 Flash
+    async scanReceipt(imageBase64, mimeType = 'image/jpeg') {
+        return this.request('/ocr/process-receipt', {
+            method: 'POST',
+            body: JSON.stringify({ imageBase64, mimeType })
+        });
     }
 };
 
