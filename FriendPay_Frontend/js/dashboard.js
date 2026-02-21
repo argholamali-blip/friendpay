@@ -42,10 +42,10 @@ async function loadDashboard() {
         const youOwe = data.user?.totalYouOwe || 0;
         const owedToYou = data.user?.totalOwedToYou || 0;
         
-        document.getElementById('dashboard-you-owe').innerHTML = 
-            `${formatToman(youOwe)} <span class="text-lg">ت</span>`;
-        document.getElementById('dashboard-owed-to-you').innerHTML = 
-            `${formatToman(owedToYou)} <span class="text-lg">ت</span>`;
+        document.getElementById('dashboard-you-owe').textContent =
+            `${formatToman(youOwe)} ت`;
+        document.getElementById('dashboard-owed-to-you').textContent =
+            `${formatToman(owedToYou)} ت`;
         
         // Load friends list
         loadFriendsList(data.friendBalances || []);
@@ -64,61 +64,49 @@ function loadFriendsList(friendBalances) {
     
     if (!friendBalances || friendBalances.length === 0) {
         container.innerHTML = `
-            <div class="text-center py-12">
-                <div class="text-6xl mb-4">👥</div>
-                <p class="text-gray-500 mb-2">هنوز دوستی اضافه نکرده‌اید</p>
-                <p class="text-sm text-gray-400">از دکمه + برای دعوت دوستان استفاده کنید</p>
+            <div class="empty-friends">
+                <div class="empty-friends-icon">👥</div>
+                <p class="empty-friends-title">هنوز دوستی اضافه نکرده‌اید</p>
+                <p class="empty-friends-sub">از دکمه + برای دعوت دوستان استفاده کنید</p>
             </div>
         `;
         return;
     }
-    
+
     container.innerHTML = friendBalances.map(friend => {
         const balance = friend.balance || 0;
         const isDebt = balance < 0; // Negative means you owe them
         const displayAmount = formatToman(Math.abs(balance));
-        
-        let statusColor, statusText, statusBg;
-        
+
+        let statusClass, statusText;
+
         if (balance === 0) {
-            statusColor = 'text-gray-600';
+            statusClass = 'even';
             statusText = 'تسویه شده';
-            statusBg = 'bg-gray-50';
         } else if (isDebt) {
-            statusColor = 'text-red-600';
+            statusClass = 'owe';
             statusText = 'شما بدهکارید';
-            statusBg = 'bg-red-50';
         } else {
-            statusColor = 'text-green-600';
+            statusClass = 'recv';
             statusText = 'شما طلبکارید';
-            statusBg = 'bg-green-50';
         }
-        
+
         return `
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-3 hover:shadow-md transition-shadow">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3 space-x-reverse flex-1">
-                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white text-lg font-bold shadow-md">
-                            ${getInitials(friend.name)}
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-bold text-gray-900">${friend.name}</p>
-                            <p class="text-xs ${statusColor} font-medium">${statusText}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="text-left">
-                        <p class="text-xl font-bold ${statusColor}">
-                            ${displayAmount} <span class="text-sm">ت</span>
-                        </p>
-                        ${balance !== 0 ? `
-                            <button 
-                                onclick="openSettleModal('${friend.id}', '${friend.name}', ${Math.abs(balance)})"
-                                class="mt-2 px-4 py-1.5 ${isDebt ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'} text-white text-xs font-semibold rounded-lg active:scale-95 transition-all">
-                                ${isDebt ? 'پرداخت' : 'دریافت'}
-                            </button>
-                        ` : ''}
-                    </div>
+            <div class="friend-card">
+                <div class="friend-card-avatar">${getInitials(friend.name)}</div>
+                <div class="friend-card-info">
+                    <p class="friend-card-name">${friend.name}</p>
+                    <p class="friend-card-status ${statusClass}">${statusText}</p>
+                </div>
+                <div class="friend-card-right">
+                    <p class="friend-card-amount ${statusClass}">${displayAmount} ت</p>
+                    ${balance !== 0 ? `
+                        <button
+                            onclick="openSettleModal('${friend.id}', '${friend.name}', ${Math.abs(balance)})"
+                            class="friend-card-btn ${isDebt ? 'btn-pay' : 'btn-req'}">
+                            ${isDebt ? 'پرداخت' : 'دریافت'}
+                        </button>
+                    ` : ''}
                 </div>
             </div>
         `;
@@ -243,8 +231,8 @@ async function loadProfile() {
                 ? `+${formatToman(netBalance)} ت` 
                 : `-${formatToman(Math.abs(netBalance))} ت`;
             document.getElementById('profile-net-balance').textContent = netBalanceText;
-            document.getElementById('profile-net-balance').className = 
-                `font-semibold ${netBalance >= 0 ? 'text-green-600' : 'text-red-600'}`;
+            document.getElementById('profile-net-balance').style.color =
+                netBalance >= 0 ? 'var(--green)' : 'var(--red)';
         }
         
     } catch (error) {
