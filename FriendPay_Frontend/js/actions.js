@@ -99,61 +99,33 @@ function buildChip(person, selectedSet, onToggle, size = 'normal') {
 
 
 /* ═══════════════════════════════════════════════════════════
-   QUICK SPLIT
+   QUICK SPLIT  (attendees → payer → split)
 ═══════════════════════════════════════════════════════════ */
 
 let qsState = {
+    attendees: [],   // [{id, name, phoneNumber, status:'registered'|'pending'}]
     payerId: null,
-    payerName: null,
-    selectedIds: new Set(),
     weightMode: false,
-    weights: {},      // id → weight number
-    friends: []
+    weights: {},
 };
 
 function openQuickSplit() {
-    qsState = { payerId: null, payerName: null, selectedIds: new Set(), weightMode: false, weights: {}, friends: [] };
-
-    const friends = getCachedFriends();
     const me = getUserData();
-    const meObj = { id: '__me__', name: me?.fullName || 'من' };
+    const meObj = { id: '__me__', name: me?.fullName || 'من', phoneNumber: me?.phoneNumber || '', status: 'registered' };
+    const friends = getCachedFriends().map(f => ({ ...f, status: 'registered', phoneNumber: '' }));
 
-    qsState.friends = [meObj, ...friends];
-
-    // Build payer chips
-    const payerList = document.getElementById('qs-payer-list');
-    payerList.innerHTML = '';
-    const payerSelected = new Set();
-
-    // Default: me as payer
-    qsState.payerId = meObj.id;
-    qsState.payerName = meObj.name;
-    payerSelected.add(meObj.id);
-
-    qsState.friends.forEach(f => {
-        const chip = buildChip(f, payerSelected, (person) => {
-            // Single-select for payer
-            payerSelected.clear();
-            payerSelected.add(person.id);
-            qsState.payerId = person.id;
-            qsState.payerName = person.name;
-            // Reset visual for all chips
-            payerList.querySelectorAll('.qs-chip').forEach(c => c.classList.remove('selected'));
-        });
-        // Pre-select me
-        if (f.id === meObj.id) chip.classList.add('selected');
-        payerList.appendChild(chip);
-    });
-
-    // Build split chips (default: select all friends + me)
-    qsState.selectedIds = new Set(qsState.friends.map(f => f.id));
-    renderSplitList();
+    qsState = { attendees: [meObj, ...friends], payerId: '__me__', weightMode: false, weights: {} };
 
     document.getElementById('qs-amount').value = '';
     document.getElementById('qs-description').value = '';
+    document.getElementById('qs-add-person').classList.add('hidden');
+    document.getElementById('qs-search-result').classList.add('hidden');
+    document.getElementById('qs-phone-input').value = '';
     document.getElementById('modal-quick-split').classList.remove('hidden');
 
-    // Amount input → live recalc
+    renderAttendeesRow();
+    renderPayerRow();
+    renderSplitList();
     document.getElementById('qs-amount').addEventListener('input', renderSplitList);
 }
 
@@ -162,114 +134,220 @@ function closeQuickSplit() {
     document.getElementById('qs-amount').removeEventListener('input', renderSplitList);
 }
 
+/* ── Attendees row ── */
+function renderAttendeesRow() {
+    const row = document.getElementById('qs-attendees-row');
+    row.innerHTML = '';
+
+    qsState.attendees.forEach(a => {
+        const chip = document.createElement('div');
+        chip.className = 'qs-chip selected';
+        chip.dataset.id = a.id;
+        const isPending = a.status === 'pending';
+        const bgStyle = isPending ? 'style="background:linear-gradient(135deg,#ffb74d,#f57c00)"' : '';
+
+        chip.innerHTML = `
+            <div class="qs-chip-avatar" ${bgStyle}>${getInitials(a.name)}</div>
+            <span class="qs-chip-name">${a.name.split(' ')[0]}</span>
+            ${isPending ? '<span class="qs-chip-pending-badge">در انتظار</span>' : ''}
+        `;
+        if (a.id !== '__me__') {
+            chip.addEventListener('click', () => {
+                chip.classList.toggle('selected');
+                renderSplitList();
+            });
+        }
+        row.appendChild(chip);
+    });
+
+    // "+" add person chip
+    const addChip = document.createElement('div');
+    addChip.className = 'qs-add-chip';
+    addChip.innerHTML = `
+        <div class="qs-add-chip-circle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+        </div>
+        <span class="qs-add-chip-label">افزودن</span>
+    `;
+    addChip.addEventListener('click', () => {
+        const el = document.getElementById('qs-add-person');
+        el.classList.toggle('hidden');
+        if (!el.classList.contains('hidden')) document.getElementById('qs-phone-input').focus();
+    });
+    row.appendChild(addChip);
+}
+
+/* ── Phone search ── */
+async function searchPhoneForSplit() {
+    const phone = document.getElementById('qs-phone-input').value.trim().replace(/\D/g, '');
+    if (!/^09\d{9}$/.test(phone)) return showAlert('شماره باید 11 رقم و با 09 شروع شود.', 'خطا');
+    if (qsState.attendees.some(a => a.phoneNumber === phone || a.id === phone))
+        return showAlert('این شخص قبلاً اضافه شده است.', 'توجه');
+
+    const btn = document.getElementById('qs-phone-search-btn');
+    btn.classList.add('loading');
+
+    try {
+        const result = await API.findByPhone(phone);
+        const resultDiv = document.getElementById('qs-search-result');
+        resultDiv.classList.remove('hidden');
+
+        const isReg = result.found && result.status === 'registered';
+        const displayName = isReg ? result.user.fullName : phone;
+        const avatarBg = isReg
+            ? 'background:linear-gradient(135deg,var(--green-light),var(--green))'
+            : 'background:linear-gradient(135deg,#ffb74d,#f57c00)';
+
+        resultDiv.innerHTML = `
+            <div class="qs-sr-avatar" style="${avatarBg}">${getInitials(displayName)}</div>
+            <div class="qs-sr-info">
+                <p class="qs-sr-name">${displayName}</p>
+                <p class="qs-sr-phone">${phone}</p>
+            </div>
+            <span class="qs-sr-badge ${isReg ? 'registered' : 'pending'}">${isReg ? 'عضو' : 'در انتظار'}</span>
+            <button class="qs-sr-add-btn" id="qs-sr-add">افزودن</button>
+        `;
+        document.getElementById('qs-sr-add').addEventListener('click', () => {
+            qsState.attendees.push({
+                id: isReg ? result.user.id : phone,
+                name: displayName,
+                phoneNumber: phone,
+                status: isReg ? 'registered' : 'pending'
+            });
+            renderAttendeesRow();
+            renderPayerRow();
+            renderSplitList();
+            document.getElementById('qs-phone-input').value = '';
+            resultDiv.classList.add('hidden');
+            document.getElementById('qs-add-person').classList.add('hidden');
+            showToast(`${displayName.split(' ')[0]} اضافه شد`, 'success');
+        });
+    } catch (e) {
+        showAlert(e.message || 'خطا در جستجو.', 'خطا');
+    } finally {
+        btn.classList.remove('loading');
+    }
+}
+window.searchPhoneForSplit = searchPhoneForSplit;
+
+// Enter key in phone input triggers search
+document.addEventListener('DOMContentLoaded', () => {
+    const phoneInput = document.getElementById('qs-phone-input');
+    if (phoneInput) {
+        phoneInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchPhoneForSplit();
+        });
+    }
+});
+
+/* ── Payer row ── */
+function renderPayerRow() {
+    const row = document.getElementById('qs-payer-list');
+    row.innerHTML = '';
+    qsState.attendees.forEach(a => {
+        const chip = document.createElement('div');
+        chip.className = 'qs-chip' + (qsState.payerId === a.id ? ' selected' : '');
+        chip.dataset.id = a.id;
+        const isPending = a.status === 'pending';
+        const bgStyle = isPending ? 'style="background:linear-gradient(135deg,#ffb74d,#f57c00)"' : '';
+        chip.innerHTML = `
+            <div class="qs-chip-avatar" ${bgStyle}>${getInitials(a.name)}</div>
+            <span class="qs-chip-name">${a.name.split(' ')[0]}</span>
+        `;
+        chip.addEventListener('click', () => {
+            qsState.payerId = a.id;
+            row.querySelectorAll('.qs-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+        });
+        row.appendChild(chip);
+    });
+}
+
+/* ── Toggle weight/equal ── */
 function toggleSplitMode() {
     qsState.weightMode = !qsState.weightMode;
     document.getElementById('qs-toggle-mode').textContent = qsState.weightMode ? 'تقسیم مساوی' : 'تقسیم وزنی';
     renderSplitList();
 }
 
+/* ── Split list ── */
 function renderSplitList() {
     const total = parseFloat(document.getElementById('qs-amount').value) || 0;
-    const selected = qsState.friends.filter(f => qsState.selectedIds.has(f.id));
-    const n = selected.length;
+    const activeIds = new Set();
+    document.querySelectorAll('#qs-attendees-row .qs-chip.selected').forEach(c => { if (c.dataset.id) activeIds.add(c.dataset.id); });
+    const active = qsState.attendees.filter(a => activeIds.has(a.id));
+    const n = active.length;
     const list = document.getElementById('qs-split-list');
     list.innerHTML = '';
 
-    if (n === 0) {
-        document.getElementById('qs-summary').innerHTML = '<span id="qs-summary-text">هیچ‌کس انتخاب نشده</span>';
-        return;
-    }
+    if (n === 0) { document.getElementById('qs-summary').innerHTML = '<span>هیچ‌کس انتخاب نشده</span>'; return; }
 
-    // Weights (default 1 each)
-    selected.forEach(f => { if (!qsState.weights[f.id]) qsState.weights[f.id] = 1; });
-    const totalWeight = selected.reduce((s, f) => s + (qsState.weights[f.id] || 1), 0);
+    active.forEach(f => { if (!qsState.weights[f.id]) qsState.weights[f.id] = 1; });
+    const totalWeight = active.reduce((s, f) => s + (qsState.weights[f.id] || 1), 0);
 
-    selected.forEach(f => {
-        const share = qsState.weightMode
-            ? Math.round(total * (qsState.weights[f.id] || 1) / totalWeight)
-            : Math.round(total / n);
-
+    active.forEach(f => {
+        const share = qsState.weightMode ? Math.round(total * (qsState.weights[f.id] || 1) / totalWeight) : Math.round(total / n);
+        const isPending = f.status === 'pending';
+        const avatarBg = isPending ? 'style="background:linear-gradient(135deg,#ffb74d,#f57c00)"' : '';
         const row = document.createElement('div');
         row.className = 'qs-split-row';
         row.innerHTML = `
-            <div class="qs-split-row-avatar">${getInitials(f.name)}</div>
-            <span class="qs-split-row-name">${f.name.split(' ')[0]}</span>
-            ${qsState.weightMode ? `
-                <input class="qs-split-row-weight" type="number" min="1" value="${qsState.weights[f.id] || 1}" data-id="${f.id}">
-            ` : ''}
+            <div class="qs-split-row-avatar" ${avatarBg}>${getInitials(f.name)}</div>
+            <span class="qs-split-row-name">${f.name.split(' ')[0]}${isPending ? ' <span style="font-size:10px;color:#e65100">(در انتظار)</span>' : ''}</span>
+            ${qsState.weightMode ? `<input class="qs-split-row-weight" type="number" min="1" value="${qsState.weights[f.id] || 1}" data-id="${f.id}">` : ''}
             <span class="qs-split-row-amount">${formatToman(share)} ت</span>
         `;
-
         if (qsState.weightMode) {
-            const weightInput = row.querySelector('.qs-split-row-weight');
-            weightInput.addEventListener('input', () => {
-                qsState.weights[f.id] = parseFloat(weightInput.value) || 1;
-                renderSplitList();
-            });
+            row.querySelector('.qs-split-row-weight').addEventListener('input', (e) => { qsState.weights[f.id] = parseFloat(e.target.value) || 1; renderSplitList(); });
         }
         list.appendChild(row);
     });
 
-    const perPerson = qsState.weightMode
-        ? '(وزنی)'
-        : `هر نفر: ${formatToman(Math.round(total / n))} تومان`;
-    document.getElementById('qs-summary').innerHTML = `<span id="qs-summary-text">${perPerson}</span>`;
-
-    // Also build split-among chip row
-    const splitChipRow = document.getElementById('qs-split-list').parentNode?.querySelector('#qs-split-chip-row');
+    const txt = qsState.weightMode ? '(وزنی)' : `هر نفر: ${formatToman(Math.round(total / n))} تومان`;
+    document.getElementById('qs-summary').innerHTML = `<span>${txt}</span>`;
 }
 
+/* ── Confirm ── */
 async function confirmQuickSplit() {
     const amount = parseFloat(document.getElementById('qs-amount').value);
     const description = document.getElementById('qs-description').value.trim();
-
     if (!amount || amount <= 0) return showAlert('مبلغ را وارد کنید.', 'خطا');
     if (!description) return showAlert('توضیح هزینه را بنویسید.', 'خطا');
 
-    const selected = qsState.friends.filter(f => qsState.selectedIds.has(f.id) && f.id !== '__me__');
-    if (selected.length === 0) return showAlert('حداقل یک دوست را انتخاب کنید.', 'خطا');
+    const activeIds = new Set();
+    document.querySelectorAll('#qs-attendees-row .qs-chip.selected').forEach(c => { if (c.dataset.id) activeIds.add(c.dataset.id); });
+    const allActive = qsState.attendees.filter(a => activeIds.has(a.id));
+    const debtors = allActive.filter(a => a.id !== qsState.payerId);
+    if (debtors.length === 0) return showAlert('حداقل یک شرکت‌کننده دیگر انتخاب کنید.', 'خطا');
 
-    const n = qsState.friends.filter(f => qsState.selectedIds.has(f.id)).length;
-    const totalWeight = selected.reduce((s, f) => s + (qsState.weights[f.id] || 1), 0);
-    const myWeight = qsState.weights['__me__'] || 1;
-    const grandWeight = totalWeight + (qsState.selectedIds.has('__me__') ? myWeight : 0);
+    const n = allActive.length;
+    const totalWeight = allActive.reduce((s, f) => s + (qsState.weights[f.id] || 1), 0);
 
     const btn = document.querySelector('#modal-quick-split .btn-green');
-    btn.disabled = true;
-    btn.textContent = 'در حال ثبت...';
+    btn.disabled = true; btn.textContent = 'در حال ثبت...';
 
     try {
-        // Record a debt for each selected friend
-        const promises = selected.map(f => {
-            const share = qsState.weightMode
-                ? Math.round(amount * ((qsState.weights[f.id] || 1) / grandWeight))
-                : Math.round(amount / n);
-
-            // Use the existing invitation API to register debt
-            return API.sendInvitation(f.id.startsWith('0') ? f.id : null, share, description)
-                .catch(() => {
-                    // If friend is already registered, fall back to settle endpoint signal
-                    // (backend handles existing users differently)
-                    return Promise.resolve();
-                });
+        const promises = debtors.map(f => {
+            const share = qsState.weightMode ? Math.round(amount * ((qsState.weights[f.id] || 1) / totalWeight)) : Math.round(amount / n);
+            const phone = f.phoneNumber || (f.id.startsWith('09') ? f.id : null);
+            return API.sendInvitation(phone, share, description).catch(() => Promise.resolve());
         });
-
         await Promise.allSettled(promises);
-
         closeQuickSplit();
         showToast('هزینه با موفقیت ثبت شد ✓', 'success');
         loadDashboard();
     } catch (e) {
         showAlert(e.message || 'خطا در ثبت هزینه.', 'خطا');
     } finally {
-        btn.disabled = false;
-        btn.textContent = 'تایید و ثبت';
+        btn.disabled = false; btn.textContent = 'تایید و ثبت';
     }
 }
 
-window.openQuickSplit   = openQuickSplit;
-window.closeQuickSplit  = closeQuickSplit;
-window.toggleSplitMode  = toggleSplitMode;
+window.openQuickSplit    = openQuickSplit;
+window.closeQuickSplit   = closeQuickSplit;
+window.toggleSplitMode   = toggleSplitMode;
 window.confirmQuickSplit = confirmQuickSplit;
 
 

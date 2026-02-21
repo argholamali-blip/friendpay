@@ -120,6 +120,14 @@ const API = {
         });
     },
 
+    // Find user by phone number
+    async findByPhone(phoneNumber) {
+        return this.request('/users/find-by-phone', {
+            method: 'POST',
+            body: JSON.stringify({ phoneNumber })
+        });
+    },
+
     // OCR: send base64 image to backend → Gemini 2.0 Flash
     async scanReceipt(imageBase64, mimeType = 'image/jpeg') {
         return this.request('/ocr/process-receipt', {
