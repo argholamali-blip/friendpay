@@ -232,53 +232,56 @@ async function searchPhoneForSplit() {
 }
 window.searchPhoneForSplit = searchPhoneForSplit;
 
-/* ── Contact Picker API ── */
+/* ── Contact Picker / Paste from clipboard ── */
+function normalizeIranPhone(raw) {
+    let phone = raw.replace(/[\s\-\(\)\+]/g, '');
+    if (phone.startsWith('98') && phone.length === 12) phone = '0' + phone.slice(2);
+    else if (phone.startsWith('0098')) phone = '0' + phone.slice(4);
+    return phone;
+}
+
 async function pickContact() {
-    // Check if Contact Picker API is supported (mobile browsers)
-    if (!('contacts' in navigator && 'ContactsManager' in window)) {
-        showAlert('دسترسی به مخاطبین فقط در مرورگر موبایل پشتیبانی می‌شود. لطفاً شماره را دستی وارد کنید.', 'توجه');
-        return;
-    }
-
-    try {
-        const props = ['name', 'tel'];
-        const opts  = { multiple: false };
-        const contacts = await navigator.contacts.select(props, opts);
-
-        if (!contacts || contacts.length === 0) return;
-
-        const contact = contacts[0];
-        // Get first phone number, strip non-digits
-        let phone = (contact.tel && contact.tel[0]) || '';
-        phone = phone.replace(/[\s\-\(\)\+]/g, '');
-
-        // Handle +98 prefix → convert to 09
-        if (phone.startsWith('98') && phone.length === 12) {
-            phone = '0' + phone.slice(2);
-        } else if (phone.startsWith('0098')) {
-            phone = '0' + phone.slice(4);
-        }
-
-        if (!/^09\d{9}$/.test(phone)) {
-            showAlert('شماره مخاطب معتبر نیست: ' + phone, 'خطا');
-            return;
-        }
-
-        // Already added?
-        if (qsState.attendees.some(a => a.phoneNumber === phone || a.id === phone)) {
-            showAlert('این شخص قبلاً اضافه شده است.', 'توجه');
-            return;
-        }
-
-        // Fill the phone input and auto-search
-        document.getElementById('qs-phone-input').value = phone;
-        await searchPhoneForSplit();
-    } catch (e) {
-        // User cancelled or permission denied
-        if (e.name !== 'TypeError') {
-            console.warn('Contact picker error:', e);
+    // 1) Try native Contact Picker API (Android Chrome, Samsung Internet)
+    if ('contacts' in navigator && 'ContactsManager' in window) {
+        try {
+            const contacts = await navigator.contacts.select(['name', 'tel'], { multiple: false });
+            if (contacts && contacts.length > 0) {
+                const contact = contacts[0];
+                let phone = normalizeIranPhone((contact.tel && contact.tel[0]) || '');
+                if (!/^09\d{9}$/.test(phone)) {
+                    showAlert('شماره مخاطب معتبر نیست: ' + phone, 'خطا');
+                    return;
+                }
+                if (qsState.attendees.some(a => a.phoneNumber === phone || a.id === phone)) {
+                    showAlert('این شخص قبلاً اضافه شده است.', 'توجه');
+                    return;
+                }
+                document.getElementById('qs-phone-input').value = phone;
+                await searchPhoneForSplit();
+                return;
+            }
+        } catch (e) {
+            if (e.name !== 'TypeError') console.warn('Contact picker error:', e);
         }
     }
+
+    // 2) Fallback: try reading from clipboard
+    if (navigator.clipboard && navigator.clipboard.readText) {
+        try {
+            const clip = await navigator.clipboard.readText();
+            const phone = normalizeIranPhone(clip.trim());
+            if (/^09\d{9}$/.test(phone)) {
+                document.getElementById('qs-phone-input').value = phone;
+                showToast('شماره از کلیپبورد وارد شد', 'success');
+                await searchPhoneForSplit();
+                return;
+            }
+        } catch (e) { /* clipboard denied — ignore */ }
+    }
+
+    // 3) Nothing worked — guide the user
+    showAlert('مرورگر شما از دسترسی مستقیم به مخاطبین پشتیبانی نمی‌کند.\n\n' +
+        '💡 شماره موبایل را از لیست مخاطبین کپی کنید، سپس دوباره این دکمه را بزنید تا خودکار وارد شود.', 'راهنما');
 }
 window.pickContact = pickContact;
 
