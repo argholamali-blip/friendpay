@@ -232,6 +232,56 @@ async function searchPhoneForSplit() {
 }
 window.searchPhoneForSplit = searchPhoneForSplit;
 
+/* ── Contact Picker API ── */
+async function pickContact() {
+    // Check if Contact Picker API is supported (mobile browsers)
+    if (!('contacts' in navigator && 'ContactsManager' in window)) {
+        showAlert('دسترسی به مخاطبین فقط در مرورگر موبایل پشتیبانی می‌شود. لطفاً شماره را دستی وارد کنید.', 'توجه');
+        return;
+    }
+
+    try {
+        const props = ['name', 'tel'];
+        const opts  = { multiple: false };
+        const contacts = await navigator.contacts.select(props, opts);
+
+        if (!contacts || contacts.length === 0) return;
+
+        const contact = contacts[0];
+        // Get first phone number, strip non-digits
+        let phone = (contact.tel && contact.tel[0]) || '';
+        phone = phone.replace(/[\s\-\(\)\+]/g, '');
+
+        // Handle +98 prefix → convert to 09
+        if (phone.startsWith('98') && phone.length === 12) {
+            phone = '0' + phone.slice(2);
+        } else if (phone.startsWith('0098')) {
+            phone = '0' + phone.slice(4);
+        }
+
+        if (!/^09\d{9}$/.test(phone)) {
+            showAlert('شماره مخاطب معتبر نیست: ' + phone, 'خطا');
+            return;
+        }
+
+        // Already added?
+        if (qsState.attendees.some(a => a.phoneNumber === phone || a.id === phone)) {
+            showAlert('این شخص قبلاً اضافه شده است.', 'توجه');
+            return;
+        }
+
+        // Fill the phone input and auto-search
+        document.getElementById('qs-phone-input').value = phone;
+        await searchPhoneForSplit();
+    } catch (e) {
+        // User cancelled or permission denied
+        if (e.name !== 'TypeError') {
+            console.warn('Contact picker error:', e);
+        }
+    }
+}
+window.pickContact = pickContact;
+
 // Enter key in phone input triggers search
 document.addEventListener('DOMContentLoaded', () => {
     const phoneInput = document.getElementById('qs-phone-input');
@@ -268,7 +318,7 @@ function renderPayerRow() {
 /* ── Toggle weight/equal ── */
 function toggleSplitMode() {
     qsState.weightMode = !qsState.weightMode;
-    document.getElementById('qs-toggle-mode').textContent = qsState.weightMode ? 'تقسیم مساوی' : 'تقسیم وزنی';
+    document.getElementById('qs-toggle-mode').textContent = qsState.weightMode ? 'تقسیم مساوی' : 'تقسیم بر اساس سهم';
     renderSplitList();
 }
 
