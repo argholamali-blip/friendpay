@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>FriendPay</title>
-    <meta name="theme-color" content="#1db954">
+    <meta name="theme-color" content="#5d3fd3">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -26,9 +30,7 @@
             <!-- Logo -->
             <div class="auth-logo-wrap">
                 <div class="auth-logo-circle">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/>
-                    </svg>
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>
                 </div>
                 <span class="auth-logo-text">FriendPay</span>
             </div>
@@ -36,13 +38,11 @@
             <h1 class="auth-heading">خوش آمدید!</h1>
             <p class="auth-subheading">برای ادامه وارد شوید</p>
 
-            <!-- Phone input -->
             <div class="field-group">
                 <label class="field-label">شماره موبایل</label>
-                <input type="tel" id="login-phone" class="field-input" placeholder="09123456789" maxlength="11">
+                <input type="tel" id="login-phone" class="field-input" placeholder="09123456789" maxlength="11" inputmode="tel">
             </div>
 
-            <!-- Password input -->
             <div class="field-group">
                 <label class="field-label">رمز عبور</label>
                 <input type="password" id="login-password" class="field-input" placeholder="رمز عبور خود را وارد کنید">
@@ -60,11 +60,8 @@
     <!-- REGISTER SCREEN -->
     <div id="auth-register" class="auth-screen">
         <div class="auth-page">
-            <!-- Back -->
             <button id="go-to-login-btn" class="auth-back-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 18l6-6-6-6"/>
-                </svg>
+                <span class="material-symbols-outlined" style="font-size:20px">arrow_forward_ios</span>
                 بازگشت
             </button>
 
@@ -78,7 +75,7 @@
 
             <div class="field-group">
                 <label class="field-label">شماره موبایل</label>
-                <input type="tel" id="register-phone" class="field-input" placeholder="09123456789" maxlength="11">
+                <input type="tel" id="register-phone" class="field-input" placeholder="09123456789" maxlength="11" inputmode="tel">
             </div>
 
             <div class="field-group">
@@ -100,69 +97,57 @@
 <!-- ═══════════════════════════════════════════
      MAIN APP
 ═══════════════════════════════════════════ -->
-<div id="main-app" class="app-wrap" style="display:none;">
+<div id="main-app" style="display:none;">
+
+    <!-- ── FIXED TOP BAR ── -->
+    <header class="top-app-bar">
+        <div class="app-logo">
+            <div class="app-logo-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>
+            </div>
+            <span class="app-logo-text">FriendPay</span>
+        </div>
+        <div class="top-bar-right">
+            <span class="top-bar-user-name" id="user-name-display">کاربر</span>
+            <div class="top-bar-avatar" id="header-avatar">
+                <span id="header-initials">U</span>
+            </div>
+            <button class="icon-btn" onclick="showModal('modal-invite-friend')" title="افزودن دوست">
+                <span class="material-symbols-outlined" style="font-size:22px">person_add</span>
+            </button>
+        </div>
+    </header>
 
     <!-- ── SCROLLABLE CONTENT ── -->
     <div class="app-scroll no-scrollbar">
 
-        <!-- HOME VIEW -->
+        <!-- ═══ HOME VIEW (فید) ═══ -->
         <div id="view-home" class="view">
 
-            <!-- Green Header -->
-            <div class="home-header">
-                <div class="home-header-inner">
-                    <div class="home-header-top">
-                        <div class="home-header-left">
-                            <button onclick="handleLogout()" class="header-icon-btn" title="خروج">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                                    <polyline points="16 17 21 12 16 7"/>
-                                    <line x1="21" y1="12" x2="9" y2="12"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="home-header-center">
-                            <div class="home-avatar" id="header-avatar">
-                                <span id="header-initials">U</span>
-                            </div>
-                            <p class="home-header-name" id="user-name-display">کاربر</p>
-                        </div>
-                        <div class="home-header-right">
-                            <button onclick="showModal('modal-invite-friend')" class="header-icon-btn" title="افزودن">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Wallet Balance -->
-                    <div class="wallet-card">
-                        <p class="wallet-label">موجودی کیف پول</p>
-                        <p class="wallet-amount">۰ <span class="wallet-unit">تومان</span></p>
-                        <div class="wallet-actions">
-                            <button class="wallet-action-btn">
-                                <span class="wallet-action-icon">↑</span>
-                                افزایش موجودی
-                            </button>
-                            <button class="wallet-action-btn">
-                                <span class="wallet-action-icon">↓</span>
-                                پرداخت
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <!-- Editorial Banner -->
+            <div class="home-banner">
+                <p class="home-banner-greeting">سلام،</p>
+                <h1 class="home-banner-name">وضعیت <span class="highlight">حساب‌ها</span></h1>
+                <p class="home-banner-sub">تسویه سریع‌تر، دوستی پایدارتر.</p>
             </div>
 
-            <!-- Balance Summary Row -->
-            <div class="balance-summary">
-                <div class="balance-pill balance-owe">
-                    <span class="balance-pill-label">بدهکارید</span>
-                    <span id="dashboard-you-owe" class="balance-pill-amount">۰ ت</span>
+            <!-- Balance Bento -->
+            <div class="balance-bento">
+                <div class="balance-card owe">
+                    <span class="balance-card-label">بدهکارید</span>
+                    <span id="dashboard-you-owe" class="balance-card-amount">۰</span>
+                    <div class="balance-card-sub">
+                        <span class="material-symbols-outlined">arrow_outward</span>
+                        تومان
+                    </div>
                 </div>
-                <div class="balance-pill balance-receive">
-                    <span class="balance-pill-label">طلبکارید</span>
-                    <span id="dashboard-owed-to-you" class="balance-pill-amount">۰ ت</span>
+                <div class="balance-card recv">
+                    <span class="balance-card-label">طلبکارید</span>
+                    <span id="dashboard-owed-to-you" class="balance-card-amount">۰</span>
+                    <div class="balance-card-sub">
+                        <span class="material-symbols-outlined">group</span>
+                        تومان
+                    </div>
                 </div>
             </div>
 
@@ -170,7 +155,7 @@
             <div class="section-wrap">
                 <div class="section-head">
                     <span class="section-title">فعالیت دوستان</span>
-                    <button onclick="showModal('modal-invite-friend')" class="section-action">+ افزودن دوست</button>
+                    <button onclick="showModal('modal-invite-friend')" class="section-action">+ افزودن</button>
                 </div>
                 <div id="friends-list-container">
                     <div class="loading-wrap">
@@ -179,35 +164,115 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- GROUPS VIEW -->
+        </div><!-- end view-home -->
+
+        <!-- ═══ SPLIT VIEW (تقسیم) ═══ -->
         <div id="view-groups" class="view hidden">
-            <div class="simple-hdr">
-                <h1 class="simple-hdr-title">گروه‌ها</h1>
-            </div>
-            <div class="empty-view">
-                <div class="empty-view-icon">👥</div>
-                <p class="empty-view-title">گروهی وجود ندارد</p>
-                <p class="empty-view-sub">به زودی این قابلیت اضافه می‌شود</p>
-            </div>
-        </div>
 
-        <!-- WALLET VIEW -->
+            <!-- Editorial Heading -->
+            <div class="home-banner">
+                <h1 class="home-banner-name" style="font-size:38px">تقسیم <span class="highlight">سریع‌تر</span></h1>
+                <p class="home-banner-sub">رسید را اسکن کنید یا هزینه را دستی وارد کنید.</p>
+            </div>
+
+            <!-- Bento Grid -->
+            <div class="split-bento">
+                <!-- Scan Receipt — big card -->
+                <div class="scan-card" onclick="closeFAB(); openSmartScan()">
+                    <div class="scan-card-gradient"></div>
+                    <div class="scan-card-content">
+                        <div class="scan-card-icon">
+                            <span class="material-symbols-outlined" style="color:var(--primary);font-size:28px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24">photo_camera</span>
+                        </div>
+                        <h2>اسکن رسید</h2>
+                        <p>هوش مصنوعی اقلام و قیمت‌ها را تشخیص می‌دهد.</p>
+                    </div>
+                </div>
+
+                <!-- Manual Entry — small card -->
+                <div class="manual-card" onclick="closeFAB(); openQuickSplit()">
+                    <div>
+                        <div class="manual-card-icon">
+                            <span class="material-symbols-outlined" style="color:var(--on-secondary-container)">add_box</span>
+                        </div>
+                        <h3>ورود دستی</h3>
+                        <p>بر اساس درصد یا مبلغ ثابت بدون رسید تقسیم کنید.</p>
+                    </div>
+                    <div>
+                        <span class="material-symbols-outlined" style="color:var(--on-secondary-container)">arrow_back</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ongoing Bills -->
+            <div class="section-wrap">
+                <div class="section-head">
+                    <span class="section-title">صورت‌حساب‌های جاری</span>
+                    <button class="section-action" onclick="openNewGroup()">+ جدید</button>
+                </div>
+                <div class="empty-view" style="padding:32px 0">
+                    <div style="font-size:40px;margin-bottom:12px">📋</div>
+                    <p class="empty-view-title" style="font-size:16px">صورت‌حسابی وجود ندارد</p>
+                    <p class="empty-view-sub" style="font-size:13px">از اسکن رسید یا ورود دستی استفاده کنید</p>
+                </div>
+            </div>
+
+        </div><!-- end view-groups -->
+
+        <!-- ═══ WALLET VIEW (کیف پول) ═══ -->
         <div id="view-wallet" class="view hidden">
-            <div class="simple-hdr">
-                <h1 class="simple-hdr-title">کیف پول</h1>
-            </div>
-            <div class="empty-view">
-                <div class="empty-view-icon">💳</div>
-                <p class="empty-view-title">کیف پول</p>
-                <p class="empty-view-sub">به زودی این قابلیت اضافه می‌شود</p>
-            </div>
-        </div>
 
-        <!-- PROFILE VIEW -->
-        <div id="view-profile" class="view hidden">
-            <!-- Green Profile Header -->
+            <!-- Balance Hero -->
+            <div class="wallet-hero">
+                <p class="wallet-hero-label">موجودی کل</p>
+                <h1 class="wallet-hero-amount">۰<span class="decimal">.۰۰</span></h1>
+                <p class="wallet-hero-unit">تومان</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="wallet-actions-row">
+                <button class="wallet-action-btn add">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    افزایش موجودی
+                </button>
+                <button class="wallet-action-btn withdraw">
+                    <span class="material-symbols-outlined">payments</span>
+                    برداشت
+                </button>
+            </div>
+
+            <!-- Insights Bento -->
+            <div class="wallet-insights">
+                <div class="insight-card earnings">
+                    <div class="insight-card-label">
+                        <span class="material-symbols-outlined">trending_up</span>
+                        سود این هفته
+                    </div>
+                    <p class="insight-card-amount">+۰ ت</p>
+                    <p class="insight-card-sub">موجودی از طریق تسویه‌های اجتماعی رشد می‌کند.</p>
+                </div>
+                <div class="insight-card-mini">
+                    <span class="material-symbols-outlined">hub</span>
+                    <p style="font-size:12px;font-weight:700;color:var(--tertiary);line-height:1.4">تسویه‌های در انتظار</p>
+                </div>
+            </div>
+
+            <!-- Coming Soon -->
+            <div class="section-wrap">
+                <div class="coming-soon-card">
+                    <div class="coming-soon-emoji">🚧</div>
+                    <p class="coming-soon-title">کیف پول دیجیتال</p>
+                    <p class="coming-soon-sub">این قابلیت به زودی فعال می‌شود</p>
+                </div>
+            </div>
+
+        </div><!-- end view-wallet -->
+
+        <!-- ═══ PROFILE / SETTLE VIEW (تسویه) ═══ -->
+        <div id="view-profile" class="view hidden" style="padding-top:56px">
+
+            <!-- Purple Profile Header -->
             <div class="profile-hdr">
                 <div class="profile-hdr-avatar">
                     <span id="profile-initials">U</span>
@@ -218,72 +283,65 @@
 
             <!-- Net Balance Card -->
             <div class="profile-balance-card">
-                <span class="profile-balance-label">موجودی خالص</span>
+                <div>
+                    <p class="profile-balance-label">موجودی خالص</p>
+                    <p style="font-size:12px;color:var(--on-surface-variant);margin-top:2px">دریافتنی منهای پرداختنی</p>
+                </div>
                 <span id="profile-net-balance" class="profile-balance-val">۰ ت</span>
             </div>
 
             <!-- Menu Items -->
             <div class="profile-menu">
                 <div class="profile-menu-item">
-                    <div class="profile-menu-icon" style="background:#e8f5e9">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                        </svg>
+                    <div class="profile-menu-icon" style="background:rgba(93,63,211,.1)">
+                        <span class="material-symbols-outlined" style="color:var(--primary);font-size:20px">person</span>
                     </div>
                     <span class="profile-menu-label">اطلاعات حساب</span>
-                    <svg class="profile-menu-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    <span class="material-symbols-outlined profile-menu-arrow" style="font-size:18px">chevron_left</span>
                 </div>
                 <div class="profile-menu-item">
-                    <div class="profile-menu-icon" style="background:#e3f2fd">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
-                        </svg>
+                    <div class="profile-menu-icon" style="background:rgba(0,100,123,.1)">
+                        <span class="material-symbols-outlined" style="color:var(--tertiary);font-size:20px">credit_card</span>
                     </div>
                     <span class="profile-menu-label">روش‌های پرداخت</span>
-                    <svg class="profile-menu-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    <span class="material-symbols-outlined profile-menu-arrow" style="font-size:18px">chevron_left</span>
                 </div>
                 <div class="profile-menu-item">
-                    <div class="profile-menu-icon" style="background:#fff3e0">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                        </svg>
+                    <div class="profile-menu-icon" style="background:rgba(0,106,53,.1)">
+                        <span class="material-symbols-outlined" style="color:var(--secondary);font-size:20px">lock</span>
                     </div>
                     <span class="profile-menu-label">امنیت</span>
-                    <svg class="profile-menu-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    <span class="material-symbols-outlined profile-menu-arrow" style="font-size:18px">chevron_left</span>
                 </div>
                 <div class="profile-menu-item">
-                    <div class="profile-menu-icon" style="background:#fce4ec">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                        </svg>
+                    <div class="profile-menu-icon" style="background:rgba(180,19,64,.1)">
+                        <span class="material-symbols-outlined" style="color:var(--error);font-size:20px">chat_bubble</span>
                     </div>
                     <span class="profile-menu-label">پشتیبانی</span>
-                    <svg class="profile-menu-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    <span class="material-symbols-outlined profile-menu-arrow" style="font-size:18px">chevron_left</span>
                 </div>
             </div>
 
-            <div style="padding: 0 16px 24px;">
-                <button onclick="handleLogout()" class="btn-logout">خروج از حساب</button>
+            <div style="padding:0 24px 32px">
+                <button id="logout-btn" class="btn-logout">خروج از حساب</button>
             </div>
-        </div>
+
+        </div><!-- end view-profile -->
 
     </div><!-- end app-scroll -->
 
     <!-- ── BOTTOM NAV ── -->
     <nav class="bottom-nav">
         <button class="nav-item active" data-view="home">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-            </svg>
-            <span class="nav-label">خانه</span>
+            <span class="material-symbols-outlined">dynamic_feed</span>
+            <span class="nav-label">فید</span>
         </button>
-        <button class="nav-item" data-view="groups">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-            <span class="nav-label">گروه‌ها</span>
+        <button class="nav-item" data-view="wallet">
+            <span class="material-symbols-outlined">account_balance_wallet</span>
+            <span class="nav-label">کیف پول</span>
         </button>
-        <!-- ── FAB Centre Slot ── -->
+
+        <!-- FAB Centre -->
         <div class="nav-fab-slot">
             <button id="fab-btn" class="fab-btn" onclick="toggleFAB()" aria-label="عملیات جدید">
                 <svg id="fab-icon" class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
@@ -292,34 +350,30 @@
             </button>
         </div>
 
-        <button class="nav-item" data-view="wallet">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
-            </svg>
-            <span class="nav-label">کیف پول</span>
+        <button class="nav-item" data-view="groups">
+            <span class="material-symbols-outlined">group_add</span>
+            <span class="nav-label">تقسیم</span>
         </button>
         <button class="nav-item" data-view="profile">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-            </svg>
-            <span class="nav-label">پروفایل</span>
+            <span class="material-symbols-outlined">handshake</span>
+            <span class="nav-label">تسویه</span>
         </button>
     </nav>
 
-    <!-- ── FAB OVERLAY ── -->
+    <!-- FAB Overlay -->
     <div id="fab-overlay" class="fab-overlay" onclick="closeFAB()"></div>
 
-    <!-- ── FAB EXPANSION MENU ── -->
+    <!-- FAB Menu -->
     <div id="fab-menu" class="fab-menu">
-        <div class="fab-menu-item" id="fmi-1" onclick="closeFAB(); openQuickSplit()">
+        <div class="fab-menu-item" onclick="closeFAB(); openQuickSplit()">
             <span class="fab-menu-label">تقسیم سریع</span>
-            <div class="fab-menu-icon-wrap" style="background:linear-gradient(135deg,#43a047,#2e7d32)">
+            <div class="fab-menu-icon-wrap" style="background:linear-gradient(135deg,var(--primary),var(--primary-dim))">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                 </svg>
             </div>
         </div>
-        <div class="fab-menu-item" id="fmi-2" onclick="closeFAB(); openSmartScan()">
+        <div class="fab-menu-item" onclick="closeFAB(); openSmartScan()">
             <span class="fab-menu-label">اسکن هوشمند رسید</span>
             <div class="fab-menu-icon-wrap" style="background:linear-gradient(135deg,#7c4dff,#512da8)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -327,7 +381,7 @@
                 </svg>
             </div>
         </div>
-        <div class="fab-menu-item" id="fmi-3" onclick="closeFAB(); openNewGroup()">
+        <div class="fab-menu-item" onclick="closeFAB(); openNewGroup()">
             <span class="fab-menu-label">ایجاد گروه / سفر</span>
             <div class="fab-menu-icon-wrap" style="background:linear-gradient(135deg,#ff7043,#e64a19)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -335,7 +389,7 @@
                 </svg>
             </div>
         </div>
-        <div class="fab-menu-item" id="fmi-4" onclick="closeFAB(); openDirectTransfer()">
+        <div class="fab-menu-item" onclick="closeFAB(); openDirectTransfer()">
             <span class="fab-menu-label">انتقال مستقیم</span>
             <div class="fab-menu-icon-wrap" style="background:linear-gradient(135deg,#00acc1,#00838f)">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -356,16 +410,23 @@
     <div class="modal-bg" onclick="hideModal('modal-invite-friend')"></div>
     <div class="modal-box">
         <div class="modal-drag-handle"></div>
-        <h2 class="modal-title">افزودن دوست جدید</h2>
-        <p class="modal-subtitle">لینک دعوت برای دوستتان ارسال می‌شود</p>
+        <div class="modal-hdr-row">
+            <div class="modal-icon-badge" style="background:rgba(93,63,211,.1)">
+                <span class="material-symbols-outlined" style="color:var(--primary);font-size:22px">person_add</span>
+            </div>
+            <div>
+                <h2 class="modal-title" style="margin-bottom:2px">افزودن دوست جدید</h2>
+                <p class="modal-subtitle" style="margin:0">دعوتنامه برای دوستتان ارسال می‌شود</p>
+            </div>
+        </div>
 
         <div class="field-group">
             <label class="field-label">شماره موبایل دوست</label>
-            <input type="tel" id="invite-phone" class="field-input" placeholder="09187654321" maxlength="11">
+            <input type="tel" id="invite-phone" class="field-input" placeholder="09187654321" maxlength="11" inputmode="tel">
         </div>
         <div class="field-group">
             <label class="field-label">مبلغ (تومان)</label>
-            <input type="number" id="invite-amount" class="field-input field-amount" placeholder="۰">
+            <input type="number" id="invite-amount" class="field-input field-amount" placeholder="۰" inputmode="numeric">
         </div>
         <div class="field-group">
             <label class="field-label">بابت چه چیزی؟</label>
@@ -382,7 +443,15 @@
     <div class="modal-bg" onclick="hideModal('modal-settle-debt')"></div>
     <div class="modal-box">
         <div class="modal-drag-handle"></div>
-        <h2 class="modal-title">تسویه حساب</h2>
+        <div class="modal-hdr-row">
+            <div class="modal-icon-badge" style="background:rgba(93,63,211,.1)">
+                <span class="material-symbols-outlined" style="color:var(--primary);font-size:22px">handshake</span>
+            </div>
+            <div>
+                <h2 class="modal-title" style="margin-bottom:2px">تسویه حساب</h2>
+                <p class="modal-subtitle" style="margin:0">مبلغ را تأیید و تسویه کنید</p>
+            </div>
+        </div>
 
         <div class="settle-to-card">
             <p class="settle-to-label">پرداخت به:</p>
@@ -391,7 +460,7 @@
 
         <div class="field-group">
             <label class="field-label">مبلغ (تومان)</label>
-            <input type="number" id="settle-amount" class="field-input field-amount" placeholder="۰">
+            <input type="number" id="settle-amount" class="field-input field-amount" placeholder="۰" inputmode="numeric">
         </div>
 
         <button onclick="handleSettleDebt()" class="btn-green btn-lg">تایید پرداخت</button>
@@ -402,17 +471,15 @@
 <!-- Alert Modal -->
 <div id="modal-alert" class="modal hidden">
     <div class="modal-bg" onclick="hideModal('modal-alert')"></div>
-    <div class="modal-box modal-alert-box">
+    <div class="modal-box">
         <div class="modal-drag-handle"></div>
-        <h2 id="alert-title" class="modal-title" style="text-align:center">توجه</h2>
-        <p id="alert-message" class="modal-alert-msg">-</p>
-        <button onclick="hideModal('modal-alert')" class="btn-green btn-lg">باشه</button>
+        <div class="modal-alert-box">
+            <h2 id="alert-title" class="modal-title" style="text-align:center;margin-bottom:0">توجه</h2>
+            <p id="alert-message" class="modal-alert-msg">-</p>
+            <button onclick="hideModal('modal-alert')" class="btn-green btn-lg">باشه</button>
+        </div>
     </div>
 </div>
-
-<!-- ═══════════════════════════════════════════
-     ACTION MODALS
-═══════════════════════════════════════════ -->
 
 <!-- ── QUICK SPLIT MODAL ── -->
 <div id="modal-quick-split" class="modal hidden">
@@ -420,7 +487,7 @@
     <div class="modal-box modal-tall">
         <div class="modal-drag-handle"></div>
         <div class="modal-hdr-row">
-            <div class="modal-icon-badge" style="background:linear-gradient(135deg,#43a047,#2e7d32)">
+            <div class="modal-icon-badge" style="background:linear-gradient(135deg,var(--primary),var(--primary-dim))">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                 </svg>
@@ -431,7 +498,7 @@
             </div>
         </div>
 
-        <!-- Amount + Description -->
+        <!-- Amount -->
         <div class="qs-amount-row">
             <input type="number" id="qs-amount" class="qs-amount-input" placeholder="۰" inputmode="numeric">
             <span class="qs-amount-unit">تومان</span>
@@ -440,50 +507,37 @@
             <input type="text" id="qs-description" class="field-input" placeholder="بابت چه چیزی؟ مثلاً: شام رستوران">
         </div>
 
-        <!-- 1. ATTENDEES — who was there -->
+        <!-- Attendees -->
         <p class="qs-section-label">شرکت‌کنندگان</p>
-        <div id="qs-attendees-row" class="qs-chip-row">
-            <!-- populated by JS: friend chips + add button -->
-        </div>
+        <div id="qs-attendees-row" class="qs-chip-row"></div>
 
-        <!-- Inline add-person form (hidden by default) -->
+        <!-- Add person form -->
         <div id="qs-add-person" class="qs-add-person hidden">
-            <!-- Contact picker full-width button -->
             <button class="qs-contacts-full-btn" onclick="pickContact()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
+                <span class="material-symbols-outlined" style="font-size:18px">contacts</span>
                 انتخاب از مخاطبین
             </button>
-            <!-- Or type phone number -->
             <div class="qs-or-divider"><span>یا شماره را وارد کنید</span></div>
             <div class="qs-add-person-input-row">
-                <input type="tel" id="qs-phone-input" class="field-input qs-phone-field" placeholder="شماره موبایل: 09..." maxlength="11" inputmode="tel">
+                <input type="tel" id="qs-phone-input" class="field-input qs-phone-field" placeholder="09..." maxlength="11" inputmode="tel">
                 <button id="qs-phone-search-btn" class="qs-search-btn" onclick="searchPhoneForSplit()">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                    </svg>
+                    <span class="material-symbols-outlined" style="font-size:18px">search</span>
                 </button>
             </div>
             <div id="qs-search-result" class="qs-search-result hidden"></div>
         </div>
 
-        <!-- 2. WHO PAID — among the attendees -->
+        <!-- Payer -->
         <p class="qs-section-label">چه کسی پرداخت کرد؟</p>
-        <div id="qs-payer-list" class="qs-chip-row">
-            <!-- populated by JS from attendees -->
-        </div>
+        <div id="qs-payer-list" class="qs-chip-row"></div>
 
         <!-- Split breakdown -->
         <div class="qs-split-hdr">
             <p class="qs-section-label" style="margin:0">تقسیم هزینه</p>
             <button class="qs-toggle-btn" id="qs-toggle-mode" onclick="toggleSplitMode()">تقسیم بر اساس سهم</button>
         </div>
-        <div id="qs-split-list" class="qs-split-list">
-            <!-- populated by JS -->
-        </div>
+        <div id="qs-split-list" class="qs-split-list"></div>
 
-        <!-- Summary row -->
         <div class="qs-summary" id="qs-summary">
             <span id="qs-summary-text">هر نفر: ۰ تومان</span>
         </div>
@@ -510,7 +564,6 @@
             </div>
         </div>
 
-        <!-- Scan states -->
         <div id="scan-state-upload" class="scan-state">
             <label class="scan-drop-zone" for="scan-file-input">
                 <div class="scan-drop-icon">📷</div>
@@ -524,9 +577,7 @@
             <div class="scan-processing-wrap">
                 <div class="scan-ai-ring">
                     <div class="scan-ai-spinner"></div>
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7c4dff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute">
-                        <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
-                    </svg>
+                    <span class="material-symbols-outlined" style="color:var(--primary);font-size:28px;position:absolute">auto_awesome</span>
                 </div>
                 <p class="scan-processing-title">هوش مصنوعی در حال تحلیل...</p>
                 <p class="scan-processing-sub">تشخیص اقلام و محاسبه مالیات</p>
@@ -534,18 +585,14 @@
         </div>
 
         <div id="scan-state-result" class="scan-state hidden">
-            <!-- Merchant + total banner -->
             <div class="scan-result-banner" id="scan-banner">
                 <span id="scan-merchant">نام فروشگاه</span>
                 <span id="scan-total-display" class="scan-total-val">۰ تومان</span>
             </div>
-            <!-- Item list for assignment -->
             <p class="qs-section-label">برای هر قلم، مشخص کنید چه کسی می‌خورد:</p>
             <div id="scan-items-list" class="scan-items-list"></div>
-            <!-- Assign to friends -->
             <p class="qs-section-label" style="margin-top:12px">دوستان</p>
             <div id="scan-friends-row" class="qs-chip-row"></div>
-            <!-- Summary -->
             <div id="scan-summary-list" class="scan-summary-list"></div>
             <button onclick="confirmSmartScan()" class="btn-green btn-lg" style="margin-top:12px">تایید و ثبت</button>
             <button onclick="closeSmartScan()" class="btn-ghost">انصراف</button>
@@ -570,7 +617,6 @@
             </div>
         </div>
 
-        <!-- Group type chips -->
         <div class="grp-type-row">
             <button class="grp-type-chip active" data-type="trip">✈️ سفر</button>
             <button class="grp-type-chip" data-type="home">🏠 خانه</button>
@@ -588,7 +634,7 @@
             <span>این قابلیت به زودی فعال می‌شود</span>
         </div>
 
-        <button class="btn-green btn-lg" style="opacity:.5;pointer-events:none">ایجاد گروه</button>
+        <button class="btn-green btn-lg" style="opacity:.45;pointer-events:none">ایجاد گروه</button>
         <button onclick="hideModal('modal-new-group')" class="btn-ghost">بازگشت</button>
     </div>
 </div>
@@ -627,7 +673,7 @@
             <span>کیف پول به زودی فعال می‌شود</span>
         </div>
 
-        <button class="btn-green btn-lg" style="opacity:.5;pointer-events:none">ارسال</button>
+        <button class="btn-green btn-lg" style="opacity:.45;pointer-events:none">ارسال</button>
         <button onclick="hideModal('modal-direct-transfer')" class="btn-ghost">انصراف</button>
     </div>
 </div>

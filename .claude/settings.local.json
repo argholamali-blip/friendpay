@@ -18,7 +18,18 @@
       "Bash(where:*)",
       "Bash(ngrok version:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git stash:*)",
+      "Bash(git push:*)",
+      "Bash(dir:*)",
+      "Bash(railway:*)",
+      "Bash(git commit:*)",
+      "Bash(echo:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(npx playwright install:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__mcp-registry__search_mcp_registry"
     ]
   }
 }
